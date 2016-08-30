@@ -1,8 +1,8 @@
 import matplotlib
 import matplotlib.pyplot as plt #for plotting
-import time
 import numpy as np
-import matplotlib.pyplot as plt
+import scipy
+from scipy.optimize import curve_fit
 
 print("Loading the file....")
 
@@ -19,7 +19,7 @@ i=0
 x = []
 y = []
 while i<len(data):
-    #print(data[i])
+    #gprint(data[i])
     data[i]=data[i].split('\t')
     #data[i][0]=float(data[i][0])
     x.append(float(data[i][0]))
@@ -32,8 +32,15 @@ while i<len(data):
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
 
-## left panel
+# plot data
 ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
 ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
 
+#draw a line
+x_range = [-500, 300]
+y_range = [-20, 10]
+#x1, y1 = [-40, -12], [10, 5]
+plt.plot(x_range, y_range, marker = 'o', color="red")
+
+# show the plot
 plt.show()
