@@ -27,6 +27,19 @@ while i<len(data):
     y.append(float(data[i][1]))
     i=i+1
 
+#test data
+#x = np.random.uniform(0., 100., 100)
+#y = 3. * x + 2. + np.random.normal(0., 10., 100)
+
+#engage in curve-fitting
+def f(x, m, b):
+    y = m*x + b
+    return y
+
+popt, pcov = curve_fit(f, x, y)
+print popt[0]
+print popt[1]
+
 #initialize plot and plot for the first time
 
 fig = plt.figure()
@@ -36,11 +49,8 @@ ax1 = fig.add_subplot(111)
 ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
 ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
 
-#draw a line
-x_range = [-500, 300]
-y_range = [-20, 10]
-#x1, y1 = [-40, -12], [10, 5]
-plt.plot(x_range, y_range, marker = 'o', color="red")
+plt.plot(x,y, color="blue")
+plt.plot(x, f(x,popt[0],popt[1]), color="red")
 
 # show the plot
 plt.show()
