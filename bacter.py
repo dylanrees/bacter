@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt #for plotting
 import numpy as np
 import scipy
 from scipy.optimize import curve_fit
+import scipy.stats
+import statistics
+
+
+# confidence interval info
+# http://stackoverflow.com/questions/15033511/compute-a-confidence-interval-from-sample-data
 
 print("Loading the file....")
 
@@ -37,6 +43,7 @@ def f(x, m, b):
     return y
 
 # this might help: http://www2.mpia-hd.mpg.de/~robitaille/PY4SCI_SS_2014/_static/15.%20Fitting%20models%20to%20data.html
+print("Calculating curve fit...")
 popt, pcov = curve_fit(f, x, y)
 print("Here are your curve fit values:")
 print(popt[0])
@@ -53,10 +60,22 @@ x2 = max(x)
 print(f(max(x),popt[0],popt[1]))
 y2 = f(max(x),popt[0],popt[1])
 
+#calculate standard deviation from the curve fit
+print("Calculating deviation...")
+deviat = [] #deviation between curve fit and
+i=0
+while i<len(x):
+    deev = y[i]-f(x[i],popt[0],popt[1])
+    print(deev)
+    deviat.append(deev)
+    i=i+1
+standard_deviation = statistics.stdev(deviat)
+print("Standard deviation is "+str(standard_deviation))
+
 #initialize plot and plot for the first time
 
 fig = plt.figure()
-ax1 = fig.add_subplot(111)
+ax1 = fig.add_subplot(121)
 
 # plot data
 
