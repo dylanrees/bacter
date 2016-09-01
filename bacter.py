@@ -5,6 +5,7 @@ import scipy
 from scipy.optimize import curve_fit
 import scipy.stats
 import statistics
+import matplotlib.image as mpimg
 
 
 # confidence interval info
@@ -81,10 +82,17 @@ ax1 = fig.add_subplot(121)
 
 #ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
 
-plt.plot(x,y, color="blue")
+ax1.plot(x,y, color="blue")
 ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
 #plt.plot(x, f(x,popt[0],popt[1]), color="red")
-plt.plot([x1,x2],[y1,y2],marker="o",color="red")
+ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
+
+#add an image
+ax2 = fig.add_subplot(122)
+img=mpimg.imread('Topo_1.tiff')
+imgplot = ax2.imshow(img)
+ax2.plot((10,10),marker="o")
+print("The image's extent is "+str(len(img)))
 
 # show the plot
 plt.show()
