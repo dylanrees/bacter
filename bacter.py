@@ -25,6 +25,15 @@ data=data.split('\n')
 i=0
 x = []
 y = []
+
+#pull out the I-V curve coordinates at the beginning and then pop them from the dataset
+xcoord=data[0].split('\t')
+ycoord=data[1].split('\t')
+print(xcoord[0])
+print(ycoord[0])
+data.pop(0)
+data.pop(0)
+
 while i<len(data):
     #gprint(data[i])
     data[i]=data[i].split('\t')
@@ -67,7 +76,7 @@ deviat = [] #deviation between curve fit and
 i=0
 while i<len(x):
     deev = y[i]-f(x[i],popt[0],popt[1])
-    print(deev)
+    #print(deev)
     deviat.append(deev)
     i=i+1
 standard_deviation = statistics.stdev(deviat)
@@ -83,6 +92,8 @@ ax1 = fig.add_subplot(121)
 #ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
 
 ax1.plot(x,y, color="blue")
+resistance = 1/popt[0] #unit is megaohms
+plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' Mohm'])
 ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
 #plt.plot(x, f(x,popt[0],popt[1]), color="red")
 ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
@@ -90,8 +101,13 @@ ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
 #add an image
 ax2 = fig.add_subplot(122)
 img=mpimg.imread('Topo_1.tiff')
-imgplot = ax2.imshow(img)
-ax2.plot((10,10),marker="o")
+ax2.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
+imgplot = ax2.imshow(img) #display the topo image
+xplot = len(img)*float(xcoord[0])/float(xcoord[1])
+yplot = 256 - len(img)*float(ycoord[0])/float(ycoord[1])
+print("xplot = "+str(xplot))
+print("yplot = "+str(yplot))
+ax2.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
 print("The image's extent is "+str(len(img)))
 
 # show the plot
