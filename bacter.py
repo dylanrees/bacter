@@ -100,7 +100,7 @@ ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
 
 #add an image
 ax2 = fig.add_subplot(122)
-img=mpimg.imread('Topo_1.tiff')
+img=mpimg.imread('GoodTopo3.tiff')
 ax2.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
 imgplot = ax2.imshow(img) #display the topo image
 xplot = len(img)*float(xcoord[0])/float(xcoord[1])
