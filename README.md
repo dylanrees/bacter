@@ -10,3 +10,5 @@ the rest will be IV data.
 
 bacter is written for python 3 and may not display
 properly in python 2.
+
+for now the data exclusion feature is manual and requires manual code modification.
