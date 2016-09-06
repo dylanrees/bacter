@@ -93,7 +93,7 @@ ax1 = fig.add_subplot(121)
 
 ax1.plot(x,y, color="blue")
 resistance = 1/popt[0] #unit is megaohms
-plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' Mohm'])
+plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' MegaΩ'])
 ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
 #plt.plot(x, f(x,popt[0],popt[1]), color="red")
 ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
