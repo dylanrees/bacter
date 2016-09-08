@@ -133,4 +133,3 @@ print("The image's extent is "+str(len(img)))
 
 # show the plot
 plt.show()
-

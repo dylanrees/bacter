@@ -20,11 +20,13 @@ E1.pack()
 load = tkinter.Button(top, text ="Load File")
 load.pack()
 
-#Terminal
-var = StringVar()
-label = Message( top, textvariable=var)
-var.set("[ ] Topographic Image Loaded \n [ ] I-V and Coordinate Data Loaded \n [ ] Nanowire Profile Loaded")
-label.pack()
+#checkmarks
+C1 = Checkbutton(top, text = "Topo Image Loaded", state=DISABLED)
+C2 = Checkbutton(top, text = "I-V Coordinate Data Loaded", state=DISABLED)
+C3 = Checkbutton(top, text = "Nanowire Topo Profile Loaded", state=DISABLED)
+C1.pack()
+C2.pack()
+C3.pack()
 
 #graph button
 topo_button = tkinter.Button(top, text ="Create Annotated Topo Image")
@@ -37,5 +39,7 @@ iv_button.pack()
 #resistivity button
 res_button = tkinter.Button(top, text ="Calculate Resistivity")
 res_button.pack()
+
+
 
 top.mainloop()
