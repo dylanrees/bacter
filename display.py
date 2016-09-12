@@ -6,40 +6,50 @@ from tkinter import *
 
 top = tkinter.Tk()
 
-#filename entry field
+#filename label
 var = StringVar()
+var.set("Type a filename below (from the same directory) and press the button to load it.")
 label = Label( top, textvariable=var)
 
-#filename label
-var.set("Type a filename below (from the same directory) and press the button to load it.")
-label.pack()
+#filename entry field
 E1 = Entry(top, bd =5)
-E1.pack()
-
-#load button
-load = tkinter.Button(top, text ="Load File")
-load.pack()
 
 #checkmarks
 C1 = Checkbutton(top, text = "Topo Image Loaded", state=DISABLED)
 C2 = Checkbutton(top, text = "I-V Coordinate Data Loaded", state=DISABLED)
 C3 = Checkbutton(top, text = "Nanowire Topo Profile Loaded", state=DISABLED)
-C1.pack()
-C2.pack()
-C3.pack()
+
+#terminal
+term = Text(top)
+
+#load button
+def loadFunc(): #the function that the load button uses
+    C1.select() #check the button
+    term.insert(INSERT, "Hello.....\n")
+load = tkinter.Button(top, text ="Load File", command=loadFunc)
 
 #graph button
 topo_button = tkinter.Button(top, text ="Create Annotated Topo Image")
-topo_button.pack()
 
 #iv button
 iv_button = tkinter.Button(top, text ="Create I-V Curve")
-iv_button.pack()
 
 #resistivity button
 res_button = tkinter.Button(top, text ="Calculate Resistivity")
+
+
+
+#pack all the interface buttons in the proper order
+label.pack()
+E1.pack()
+load.pack()
+C1.pack()
+C2.pack()
+C3.pack()
+topo_button.pack()
+iv_button.pack()
 res_button.pack()
+term.pack()
 
-
-
+#let 'er rip
 top.mainloop()
