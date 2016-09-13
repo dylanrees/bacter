@@ -5,6 +5,7 @@ import tkinter
 from tkinter import *
 
 top = tkinter.Tk()
+data = [] # will hold the data later
 
 #filename label
 var = StringVar()
@@ -25,19 +26,30 @@ term = Text(top)
 #load button
 def loadFunc(): #the function that the load button uses
     C1.select() #check the button
-    term.insert(INSERT, "Hello.....\n")
+    loadstring=E1.get() #load the text field text
+    term.insert(INSERT, "Trying to load \""+loadstring+"\"\n")
+    try:
+        f=open(loadstring,'r')
+        term.insert(INSERT, "...success!\n")
+        data=str(f.read())
+    except:
+        term.insert(INSERT, "...failed.\n")
 load = tkinter.Button(top, text ="Load File", command=loadFunc)
 
 #graph button
-topo_button = tkinter.Button(top, text ="Create Annotated Topo Image")
+def topoFunc():
+    term.insert(INSERT, "Need to load topo image.\n")
+topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=topoFunc)
 
 #iv button
-iv_button = tkinter.Button(top, text ="Create I-V Curve")
+def ivFunc():
+    term.insert(INSERT, "Need to load IV data.\n")
+iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
 
 #resistivity button
-res_button = tkinter.Button(top, text ="Calculate Resistivity")
-
-
+def resFunc():
+    term.insert(INSERT, "Need to load wire profile.\n")
+res_button = tkinter.Button(top, text ="Calculate Resistivity",command=resFunc)
 
 #pack all the interface buttons in the proper order
 label.pack()
