@@ -3,6 +3,7 @@
 
 import tkinter
 from tkinter import *
+import matplotlib.image as mpimg
 
 top = tkinter.Tk()
 data = [] # will hold the data right when it comes out the pipe
@@ -33,13 +34,29 @@ def loadFunc(): #the function that the load button uses
     term.insert(INSERT, "Trying to load \""+loadstring+"\"\n")
     try:
         f=open(loadstring,'r')
-        term.insert(INSERT, "...success!\n")
-        data=str(f.read())
-        data=data.split('\n')
-        if data[0]=="iv":
-            C1.select() #check the IV button
-        elif data[0]=="ht":
-            C2.select() #check the height button
+        try:
+            data=str(f.read())
+            data=data.split('\n')
+            if data[0]=="iv":
+                data_iv = data
+                data_iv.pop(0) #take the "iv" tag off the beginning
+                C1.select() #check the IV button
+                term.insert(INSERT, "...successfully loaded IV data!\n")
+            elif data[0]=="ht":
+                data_ht = data
+                data_ht.pop(0)
+                C2.select() #check the height button
+                term.insert(INSERT, "...successfully loaded height data!\n")
+                print(data_ht[0])
+            else:
+                term.insert(INSERT, "...not sure what type of file this is.\n")
+        except:
+            try:
+                data_topo=mpimg.imread(loadstring)
+                term.insert(INSERT, "...successfully loaded topo image!\n")
+                C3.select() #check the topo button
+            except:
+                term.insert(INSERT, "...not sure what type of file this is.\n")
     except:
         term.insert(INSERT, "...failed.\n")
 load = tkinter.Button(top, text ="Load File", command=loadFunc)
