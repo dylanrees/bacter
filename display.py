@@ -4,6 +4,7 @@
 import tkinter
 from tkinter import *
 import matplotlib.image as mpimg
+import functions
 
 top = tkinter.Tk()
 data = [] # will hold the data right when it comes out the pipe
