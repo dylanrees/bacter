@@ -21,9 +21,14 @@ label = Label( top, textvariable=var)
 E1 = Entry(top, bd =5)
 
 #checkmarks
-C1 = Checkbutton(top, text = "Topo Image Loaded", state=DISABLED)
-C2 = Checkbutton(top, text = "I-V Coordinate Data Loaded", state=DISABLED)
-C3 = Checkbutton(top, text = "Nanowire Topo Profile Loaded", state=DISABLED)
+topoload = tkinter.IntVar()
+C1 = Checkbutton(top, text = "Topo Image Loaded", state=DISABLED, variable=topoload)
+
+ivload = tkinter.IntVar()
+C2 = Checkbutton(top, text = "I-V Coordinate Data Loaded", state=DISABLED, variable=ivload)
+
+htload = tkinter.IntVar()
+C3 = Checkbutton(top, text = "Nanowire Height Profile Loaded", state=DISABLED, variable = htload)
 
 #terminal
 term = Text(top)
@@ -41,12 +46,12 @@ def loadFunc(): #the function that the load button uses
             if data[0]=="iv":
                 data_iv = data
                 data_iv.pop(0) #take the "iv" tag off the beginning
-                C1.select() #check the IV button
+                C2.select() #check the IV button
                 term.insert(INSERT, "...successfully loaded IV data!\n")
             elif data[0]=="ht":
                 data_ht = data
                 data_ht.pop(0)
-                C2.select() #check the height button
+                C3.select() #check the height button
                 term.insert(INSERT, "...successfully loaded height data!\n")
                 print(data_ht[0])
             else:
@@ -55,7 +60,7 @@ def loadFunc(): #the function that the load button uses
             try:
                 data_topo=mpimg.imread(loadstring)
                 term.insert(INSERT, "...successfully loaded topo image!\n")
-                C3.select() #check the topo button
+                C1.select() #check the topo button
             except:
                 term.insert(INSERT, "...not sure what type of file this is.\n")
     except:
@@ -64,17 +69,26 @@ load = tkinter.Button(top, text ="Load File", command=loadFunc)
 
 #graph button
 def topoFunc():
-    term.insert(INSERT, "Need to load topo image.\n")
+    if topoload.get() == 1:
+        term.insert(INSERT, "10010101001010101010\n")
+    else:
+        term.insert(INSERT, "Need to load topo image.\n")
 topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=topoFunc)
 
 #iv button
 def ivFunc():
-    term.insert(INSERT, "Need to load IV data.\n")
+    if ivload.get() == 1:
+        term.insert(INSERT, "10010101001010101010\n")
+    else:
+        term.insert(INSERT, "Need to load IV data.\n")
 iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
 
 #resistivity button
 def resFunc():
-    term.insert(INSERT, "Need to load wire profile.\n")
+    if htload.get() == 1:
+        term.insert(INSERT, "10010101001010101010\n")
+    else:
+        term.insert(INSERT, "Need to load wire profile.\n")
 res_button = tkinter.Button(top, text ="Calculate Resistivity",command=resFunc)
 
 #pack all the interface buttons in the proper order
