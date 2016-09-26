@@ -7,6 +7,7 @@ import matplotlib.image as mpimg
 import functions
 
 top = tkinter.Tk()
+global data
 data = [] # will hold the data right when it comes out the pipe
 data_iv = [] #specifically iv data
 data_ht = [] #specifically height data
@@ -35,7 +36,7 @@ term = Text(top)
 
 #load button
 def loadFunc(): #the function that the load button uses
-
+    global data
     loadstring=E1.get() #load the text field text
     term.insert(INSERT, "Trying to load \""+loadstring+"\"\n")
     try:
@@ -46,8 +47,10 @@ def loadFunc(): #the function that the load button uses
             if data[0]=="iv":
                 data_iv = data
                 data_iv.pop(0) #take the "iv" tag off the beginning
+                print("data_iv 1: "+str(data_iv))
+                print("data: "+str(data))
                 C2.select() #check the IV button
-                term.insert(INSERT, "...successfully loaded IV data!\n")
+                term.insert(INSERT, "...successfully loaded IV data!\n"         )
             elif data[0]=="ht":
                 data_ht = data
                 data_ht.pop(0)
@@ -77,10 +80,14 @@ topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=to
 
 #iv button
 def ivFunc():
+    global data
     if ivload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
+        q = functions.arrayProc(data)
+        functions.ivplot(q)
     else:
         term.insert(INSERT, "Need to load IV data.\n")
+
 iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
 
 #resistivity button

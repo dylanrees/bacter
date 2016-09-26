@@ -8,7 +8,7 @@ import statistics
 import matplotlib.image as mpimg
 import time
 
-def arrayProc(data):
+def arrayProc(q):
     #this function splits the read file into a data array
     #form: input[a][b]
     # a represents the row in the list
@@ -18,22 +18,25 @@ def arrayProc(data):
     y = []
 
     #pull out the I-V curve coordinates at the beginning and then pop them from the dataset
-    xcoord=data[0].split('\t')
-    ycoord=data[1].split('\t')
-    print(xcoord[0])
-    print(ycoord[0])
-    data.pop(0)
-    data.pop(0)
+    xcoord=q[0].split('\t')
+    ycoord=q[1].split('\t')
+    print("x="+xcoord[0]+"um")
+    print("y="+ycoord[0]+"um")
+    q.pop(0)
+    q.pop(0)
 
-    while i<len(data):
-        #gprint(data[i])
-        data[i]=data[i].split('\t')
-        #data[i][0]=float(data[i][0])
-        x.append(float(data[i][0]))
-        #data[i][1]=float(data[i][1])
-        y.append(float(data[i][1]))
+    while i<len(q):
+        if len(q[i])==0:
+            q.pop(i) #discards any dummy entry formed at the end due to the split function
+        else:
+            print("q["+str(i)+"]= "+str(q[i]))
+            q[i]=q[i].split('\t')
+            print("q["+str(i)+"][0]= "+str(q[i][0]))
+            print("q["+str(i)+"][1]= "+str(q[i][1]))
+            q[i][0]=float(q[i][0])
+            q[i][1]=float(q[i][1])
         i=i+1
-    return(data)
+    return(q)
 
 #curve-fitting function
 def f(x, m, b):
@@ -101,15 +104,19 @@ def deviation():
     print("Standard deviation is "+str(standard_deviation))
     return(standard_deviation)
 
-def ivplot():
+def ivplot(q):
+    fig = plt.figure()
+    ax1 = fig.add_subplot(121)
     #ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
-    ax1.plot(x_include,y_include, color="blue")
-    ax1.plot(x_exclude_l,y_exclude_l, color="lightblue")
-    ax1.plot(x_exclude_r,y_exclude_r, color="lightblue")
-    resistance = 1/popt[0] #unit is megaohms
-    plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' MegaΩ'])
-    ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
-    ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
+    #ax1.plot(x_include,y_include, color="blue")
+    #ax1.plot(x_exclude_l,y_exclude_l, color="lightblue")
+    #ax1.plot(x_exclude_r,y_exclude_r, color="lightblue")
+    #resistance = 1/popt[0] #unit is megaohms
+    #plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' MegaΩ'])
+    #ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
+    #ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
+    ax1.plot(q,marker="o",color="red")
+    plt.show()
 
 def topoplot():
     #add an image
