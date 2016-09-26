@@ -106,7 +106,14 @@ def deviation():
 
 def ivplot(q):
     fig = plt.figure()
-    ax1 = fig.add_subplot(121)
+    ax1 = fig.add_subplot(111)
+    x = []
+    y = []
+    i=0
+    while i<len(q):
+        x.append(q[i][0])
+        y.append(q[i][1])
+        i = i+1
     #ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
     #ax1.plot(x_include,y_include, color="blue")
     #ax1.plot(x_exclude_l,y_exclude_l, color="lightblue")
@@ -115,7 +122,7 @@ def ivplot(q):
     #plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' MegaΩ'])
     #ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
     #ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
-    ax1.plot(q,marker="o",color="red")
+    ax1.plot(x,y,marker="o",color="red")
     plt.show()
 
 def topoplot():
