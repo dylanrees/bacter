@@ -84,7 +84,7 @@ def ivFunc():
     if ivload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
         q = functions.arrayProc(data)
-        qinc = functions.truncate(q,-20,30)
+        qinc = functions.truncate(q,-100,30)
         fits = functions.curveFit(qinc)
         functions.ivplot(q,qinc,fits)
     else:

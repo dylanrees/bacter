@@ -112,7 +112,11 @@ def ivplot(q,r,s):
     #ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
     ax1.plot(x1,y1,color="lightblue")
     ax1.plot(x2,y2,color="blue")
-    ax1.plot([0,0],[100,0],marker="o",color="red")
+    line_x1 = x2[0]
+    line_x2 = x2[len(x2)-1]
+    line_y1 = f(x2[0],s[0],s[1])
+    line_y2 = f(x2[len(x2)-1],s[0],s[1])
+    ax1.plot([line_x1,line_x2],[line_y1, line_y2],marker="o",color="red")
     plt.show()
 
 def topoplot():
