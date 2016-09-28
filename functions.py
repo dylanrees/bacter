@@ -29,10 +29,10 @@ def arrayProc(q):
         if len(q[i])==0:
             q.pop(i) #discards any dummy entry formed at the end due to the split function
         else:
-            print("q["+str(i)+"]= "+str(q[i]))
+            #print("q["+str(i)+"]= "+str(q[i]))
             q[i]=q[i].split('\t')
-            print("q["+str(i)+"][0]= "+str(q[i][0]))
-            print("q["+str(i)+"][1]= "+str(q[i][1]))
+            #print("q["+str(i)+"][0]= "+str(q[i][0]))
+            #print("q["+str(i)+"][1]= "+str(q[i][1]))
             q[i][0]=float(q[i][0])
             q[i][1]=float(q[i][1])
         i=i+1
@@ -43,52 +43,30 @@ def f(x, m, b):
     y = m*x + b
     return y
 
-def curveFit(x):
-    # split the data into two arrays, one of which is discarded from fitting but still plotted
-    left = -300 #data clip area on the left
-    right = 100 #data clip area on the right
-    i = 0 #loop index
-    #data to be included in curve fitting:
-    x_include = []
-    y_include = []
-    #data excluded on the left:
-    x_exclude_l = []
-    y_exclude_l = []
-    #data excluded on the right:
-    x_exclude_r = []
-    y_exclude_r = []
-    while (i<len(x)-1):
-        if (x[i] < left):
-            x_exclude_l.append(x[i])
-            y_exclude_l.append(y[i])
-        elif (x[i] > right):
-            x_exclude_r.append(x[i])
-            y_exclude_r.append(y[i])
-        else:
-            x_include.append(x[i])
-            y_include.append(y[i])
-            i = i+1
-
-    # curve fit calculation (using only "include" data from above)
+def curveFit(q):
     print("Calculating curve fit...")
-    popt, pcov = curve_fit(f, x_include, y_include)
+    i=0
+    x = []
+    y = []
+    while i<len(q):
+        x.append(q[i][0])
+        y.append(q[i][1])
+        i = i+1
+    popt, pcov = curve_fit(f, x, y)
     print("Here are your curve fit values:")
     print(popt[0])
     print(popt[1])
-    return(x)
+    return(popt)
 
-def endpoints():
+def truncate(q,left,right):
     #calculate data length for curve fit plotting.  only uses the "include" data from the step above
-    print("Here are the endpoint values of x_include:")
-    print((min(x_include)))
-    x1 = min(x_include)
-    print(f(min(x_include),popt[0],popt[1]))
-    y1 = f(min(x_include),popt[0],popt[1])
-    print((max(x_include)))
-    x2 = max(x_include)
-    print(f(max(x_include),popt[0],popt[1]))
-    y2 = f(max(x_include),popt[0],popt[1])
-    return(x1)
+    q_include = []
+    i=0
+    while (i<len(q)-1):
+        if (q[i][0] > left) and (q[i][0] < right):
+                q_include.append(q[i])
+        i = i+1
+    return(q_include)
 
 def deviation():
     #calculate standard deviation from the curve fit
@@ -104,15 +82,25 @@ def deviation():
     print("Standard deviation is "+str(standard_deviation))
     return(standard_deviation)
 
-def ivplot(q):
+def ivplot(q,r,s):
+    #q = main data
+    #r = truncated data
+    #s = curve fits
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    x = []
-    y = []
+    x1 = []
+    y1 = []
+    x2 = []
+    y2 = []
     i=0
     while i<len(q):
-        x.append(q[i][0])
-        y.append(q[i][1])
+        x1.append(q[i][0])
+        y1.append(q[i][1])
+        i = i+1
+    i=0
+    while i<len(r):
+        x2.append(r[i][0])
+        y2.append(r[i][1])
         i = i+1
     #ax1.scatter(x,y,color='blue',s=5,edgecolor='none')
     #ax1.plot(x_include,y_include, color="blue")
@@ -122,7 +110,9 @@ def ivplot(q):
     #plt.legend(['slope = '+str(popt[0])+'\nintercept = '+str(popt[1])+'\nresistance = '+str(resistance)+' MegaΩ'])
     #ax1.set_aspect(1./ax1.get_data_ratio()) # make axes square
     #ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
-    ax1.plot(x,y,marker="o",color="red")
+    ax1.plot(x1,y1,color="lightblue")
+    ax1.plot(x2,y2,color="blue")
+    ax1.plot([0,0],[100,0],marker="o",color="red")
     plt.show()
 
 def topoplot():
