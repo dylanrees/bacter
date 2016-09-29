@@ -61,9 +61,11 @@ def curveFit(q):
 def truncate(q,left,right):
     #calculate data length for curve fit plotting.  only uses the "include" data from the step above
     q_include = []
+    global left_trunc
+    global right_trunc
     i=0
     while (i<len(q)-1):
-        if (q[i][0] > left) and (q[i][0] < right):
+        if (q[i][0] > left_trunc) and (q[i][0] < right_trunc):
                 q_include.append(q[i])
         i = i+1
     return(q_include)

@@ -8,6 +8,10 @@ import functions
 
 top = tkinter.Tk()
 global data
+global left_trunc
+global right_trunc
+left_trunc = -1000000
+right_trunc = 1000000
 data = [] # will hold the data right when it comes out the pipe
 data_iv = [] #specifically iv data
 data_ht = [] #specifically height data
@@ -39,6 +43,18 @@ C3 = Checkbutton(top, text = "Nanowire Height Profile Loaded", state=DISABLED, v
 
 #terminal
 term = Text(top)
+
+def truncate(q):
+    #calculate data length for curve fit plotting.  only uses the "include" data from the step above
+    q_include = []
+    global left_trunc
+    global right_trunc
+    i=0
+    while (i<len(q)-1):
+        if (q[i][0] > left_trunc) and (q[i][0] < right_trunc):
+                q_include.append(q[i])
+        i = i+1
+    return(q_include)
 
 #load button
 def loadFunc(): #the function that the load button uses
@@ -90,15 +106,39 @@ def ivFunc():
     if ivload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
         q = functions.arrayProc(data)
-        qinc = functions.truncate(q,-100,30)
+        qinc = truncate(q)
         fits = functions.curveFit(qinc)
         functions.ivplot(q,qinc,fits)
     else:
         term.insert(INSERT, "Need to load IV data.\n")
 
+iv_left_entry = Entry(top, bd =2)
+iv_right_entry = Entry(top, bd =2)
+
+def leftFunc():
+    global left_trunc
+    leftstring=iv_left_entry.get()
+    try:
+        left_trunc = float(leftstring)
+        term.insert(INSERT, "Set the left IV truncation to "+leftstring+"\n")
+    except:
+        term.insert(INSERT, "Not a valid numerical value."+leftstring+"\n")
+
+
+def rightFunc():
+    global right_trunc
+    rightstring=iv_right_entry.get()
+    try:
+        right_trunc = float(rightstring)
+        term.insert(INSERT, "Set the right IV truncation to "+rightstring+"\n")
+    except:
+        term.insert(INSERT, "Not a valid numerical value."+rightstring+"\n")
+
+
 iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
-iv_left = Entry(top, bd =2)
-iv_right = Entry(top, bd =2)
+
+iv_left_button = tkinter.Button(top, text ="Set", command=leftFunc)
+iv_right_button = tkinter.Button(top, text ="Set", command=rightFunc)
 
 #resistivity button
 def resFunc():
@@ -118,9 +158,11 @@ C3.pack()
 topo_button.pack()
 iv_button.pack()
 left_label.pack()
-iv_left.pack()
+iv_left_entry.pack()
+iv_left_button.pack()
 right_label.pack()
-iv_right.pack()
+iv_right_entry.pack()
+iv_right_button.pack()
 res_button.pack()
 term.pack()
 
