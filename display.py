@@ -17,6 +17,12 @@ data_topo = [] #specifically topo map data
 var = StringVar()
 var.set("Type a filename below (from the same directory) and press the button to load it.")
 label = Label( top, textvariable=var)
+left_text = StringVar()
+left_text.set("IV Left Truncation:")
+right_text = StringVar()
+right_text.set("IV Right Truncation:")
+left_label = Label( top, textvariable=left_text)
+right_label = Label( top, textvariable=right_text)
 
 #filename entry field
 E1 = Entry(top, bd =5)
@@ -91,6 +97,8 @@ def ivFunc():
         term.insert(INSERT, "Need to load IV data.\n")
 
 iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
+iv_left = Entry(top, bd =2)
+iv_right = Entry(top, bd =2)
 
 #resistivity button
 def resFunc():
@@ -109,6 +117,10 @@ C2.pack()
 C3.pack()
 topo_button.pack()
 iv_button.pack()
+left_label.pack()
+iv_left.pack()
+right_label.pack()
+iv_right.pack()
 res_button.pack()
 term.pack()
 

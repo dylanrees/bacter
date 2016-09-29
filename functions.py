@@ -88,6 +88,8 @@ def ivplot(q,r,s):
     #s = curve fits
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
+    ax1.set_ylabel('Current (nA)')
+    ax1.set_xlabel('Voltage (uV)')
     x1 = []
     y1 = []
     x2 = []
