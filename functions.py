@@ -58,18 +58,6 @@ def curveFit(q):
     print(popt[1])
     return(popt)
 
-def truncate(q,left,right):
-    #calculate data length for curve fit plotting.  only uses the "include" data from the step above
-    q_include = []
-    global left_trunc
-    global right_trunc
-    i=0
-    while (i<len(q)-1):
-        if (q[i][0] > left_trunc) and (q[i][0] < right_trunc):
-                q_include.append(q[i])
-        i = i+1
-    return(q_include)
-
 def deviation():
     #calculate standard deviation from the curve fit
     print("Calculating deviation...")
@@ -124,14 +112,19 @@ def ivplot(q,r,s):
     plt.show()
 
 def topoplot():
-    #add an image
-    ax2 = fig.add_subplot(122)
+    xcoord = []
+    ycoord = []
+    xcoord.append(0.2)
+    xcoord.append(0.2)
+    ycoord.append(0.2)
+    ycoord.append(0.2)
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
     img=mpimg.imread('GoodTopo3.tiff')
-    ax2.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
-    imgplot = ax2.imshow(np.flipud(img)) #display the topo image
+    ax1.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
+    imgplot = ax1.imshow(np.flipud(img)) #display the topo image
     xplot = len(img)*float(xcoord[0])/float(xcoord[1])
-    yplot = 256 - len(img)*float(ycoord[0])/float(ycoord[1])
-    print("xplot = "+str(xplot))
-    print("yplot = "+str(yplot))
-    ax2.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
-    print("The image's extent is "+str(len(img)))
+    yplot = len(img)*float(ycoord[0])/float(ycoord[1])
+    ax1.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
+    plt.show()
+    #Sy print("The image's extent is "+str(len(img)))

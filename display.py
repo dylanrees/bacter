@@ -95,7 +95,12 @@ load = tkinter.Button(top, text ="Load File", command=loadFunc)
 #graph button
 def topoFunc():
     if topoload.get() == 1:
-        term.insert(INSERT, "10010101001010101010\n")
+        term.insert(INSERT, "10010101001010101010...\n")
+        try:
+            functions.topoplot()
+            term.insert(INSERT, "...yes!\n")
+        except:
+            term.insert(INSERT, "...oomf\n")
     else:
         term.insert(INSERT, "Need to load topo image.\n")
 topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=topoFunc)
