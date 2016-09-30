@@ -8,36 +8,6 @@ import statistics
 import matplotlib.image as mpimg
 import time
 
-def arrayProc(q):
-    #this function splits the read file into a data array
-    #form: input[a][b]
-    # a represents the row in the list
-    # b=[0,1] represents whether it's x or y
-    i=0
-    x = []
-    y = []
-
-    #pull out the I-V curve coordinates at the beginning and then pop them from the dataset
-    xcoord=q[0].split('\t')
-    ycoord=q[1].split('\t')
-    print("x="+xcoord[0]+"um")
-    print("y="+ycoord[0]+"um")
-    q.pop(0)
-    q.pop(0)
-
-    while i<len(q):
-        if len(q[i])==0:
-            q.pop(i) #discards any dummy entry formed at the end due to the split function
-        else:
-            #print("q["+str(i)+"]= "+str(q[i]))
-            q[i]=q[i].split('\t')
-            #print("q["+str(i)+"][0]= "+str(q[i][0]))
-            #print("q["+str(i)+"][1]= "+str(q[i][1]))
-            q[i][0]=float(q[i][0])
-            q[i][1]=float(q[i][1])
-        i=i+1
-    return(q)
-
 #curve-fitting function
 def f(x, m, b):
     y = m*x + b
@@ -110,21 +80,3 @@ def ivplot(q,r,s):
     line_y2 = f(x2[len(x2)-1],s[0],s[1])
     ax1.plot([line_x1,line_x2],[line_y1, line_y2],marker="o",color="red")
     plt.show()
-
-def topoplot():
-    xcoord = []
-    ycoord = []
-    xcoord.append(0.2)
-    xcoord.append(0.2)
-    ycoord.append(0.2)
-    ycoord.append(0.2)
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    img=mpimg.imread('GoodTopo3.tiff')
-    ax1.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
-    imgplot = ax1.imshow(np.flipud(img)) #display the topo image
-    xplot = len(img)*float(xcoord[0])/float(xcoord[1])
-    yplot = len(img)*float(ycoord[0])/float(ycoord[1])
-    ax1.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
-    plt.show()
-    #Sy print("The image's extent is "+str(len(img)))

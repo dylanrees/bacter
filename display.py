@@ -5,14 +5,20 @@ import tkinter
 from tkinter import *
 import matplotlib.image as mpimg
 import functions
+import matplotlib.pyplot as plt #for plotting
+import numpy as np
 
 top = tkinter.Tk()
 global data
-global left_trunc
-global right_trunc
-left_trunc = -1000000
+global left_trunc #left truncation point for iv curves
+global right_trunc #right truncation point fo iv curves
+left_trunc = -1000000 #initial large values prevent truncation
 right_trunc = 1000000
-data = [] # will hold the data right when it comes out the pipe
+global xpos #topo coordinates
+global ypos #topo coordinates
+xpos = 0
+ypos = 0
+data = [] # will hold the file data right when it comes out the pipe
 data_iv = [] #specifically iv data
 data_ht = [] #specifically height data
 data_topo = [] #specifically topo map data
@@ -27,6 +33,56 @@ right_text = StringVar()
 right_text.set("IV Right Truncation:")
 left_label = Label( top, textvariable=left_text)
 right_label = Label( top, textvariable=right_text)
+
+def arrayProc(q):
+    #this function splits the read file into a data array
+    #form: input[a][b]
+    # a represents the row in the list
+    # b=[0,1] represents whether it's x or y
+    global xpos
+    global ypos
+    i=0
+
+    #pull out the I-V curve coordinates at the beginning and then pop them from the dataset
+    xcoord=q[0].split('\t')
+    ycoord=q[1].split('\t')
+    print("x="+xcoord[0]+"um")
+    print("y="+ycoord[0]+"um")
+    xpos = q[0]
+    q.pop(0)
+    ypos = q[0]
+    q.pop(0)
+
+    while i<len(q):
+        if len(q[i])==0:
+            q.pop(i) #discards any dummy entry formed at the end due to the split function
+        else:
+            #print("q["+str(i)+"]= "+str(q[i]))
+            q[i]=q[i].split('\t')
+            #print("q["+str(i)+"][0]= "+str(q[i][0]))
+            #print("q["+str(i)+"][1]= "+str(q[i][1]))
+            q[i][0]=float(q[i][0])
+            q[i][1]=float(q[i][1])
+        i=i+1
+    return(q)
+
+def topoPlot():
+    global xpos
+    global ypos
+    xpos=xpos.split('\t')
+    ypos=ypos.split('\t')
+    print("xpos = "+str(xpos))
+    print("ypos = "+str(ypos))
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    img=mpimg.imread('GoodTopo3.tiff')
+    ax1.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
+    imgplot = ax1.imshow(np.flipud(img)) #display the topo image
+    xplot = len(img)*float(xpos[0])/float(xpos[1])
+    yplot = len(img)*float(ypos[0])/float(ypos[1])
+    ax1.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
+    plt.show()
+    #Sy print("The image's extent is "+str(len(img)))
 
 #filename entry field
 E1 = Entry(top, bd =5)
@@ -69,8 +125,6 @@ def loadFunc(): #the function that the load button uses
             if data[0]=="iv":
                 data_iv = data
                 data_iv.pop(0) #take the "iv" tag off the beginning
-                print("data_iv 1: "+str(data_iv))
-                print("data: "+str(data))
                 C2.select() #check the IV button
                 term.insert(INSERT, "...successfully loaded IV data!\n"         )
             elif data[0]=="ht":
@@ -96,11 +150,12 @@ load = tkinter.Button(top, text ="Load File", command=loadFunc)
 def topoFunc():
     if topoload.get() == 1:
         term.insert(INSERT, "10010101001010101010...\n")
-        try:
-            functions.topoplot()
-            term.insert(INSERT, "...yes!\n")
-        except:
-            term.insert(INSERT, "...oomf\n")
+        topoPlot()
+        #try:
+        #    topoPlot()
+        #    term.insert(INSERT, "...yes!\n")
+        #except:
+        #    term.insert(INSERT, "...oomf\n")
     else:
         term.insert(INSERT, "Need to load topo image.\n")
 topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=topoFunc)
@@ -110,7 +165,7 @@ def ivFunc():
     global data
     if ivload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
-        q = functions.arrayProc(data)
+        q = arrayProc(data)
         qinc = truncate(q)
         fits = functions.curveFit(qinc)
         functions.ivplot(q,qinc,fits)
