@@ -17,7 +17,7 @@ global right_trunc_ht #right truncation point for ht curves
 left_trunc = -1000000 #initial large values prevent truncation
 right_trunc = 1000000
 left_trunc_ht = -1000000
-right_truc_ht = 1000000
+right_trunc_ht = 1000000
 global xpos #topo coordinates
 global ypos #topo coordinates
 xpos = 0
@@ -110,7 +110,7 @@ C3 = Checkbutton(top, text = "Nanowire Height Profile Loaded", state=DISABLED, v
 #terminal
 term = Text(top)
 
-def integrate(q,r):
+def integrate(q):
     x1 = []
     y1 = []
     x2 = []
@@ -121,28 +121,18 @@ def integrate(q,r):
         y1.append(q[i][1])
         i = i+1
     i=0
-    while i<len(r)-1:
-        x2.append(r[i][0])
-        y2.append(r[i][1])
-        i = i+1
     output = np.trapz(x1,y1)
-    print("area: "+str(output)+" square nanometers or whatever")
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111)
-    ax1.set_ylabel('Width (nm)')
-    ax1.set_xlabel('Height (nm)')
-    ax1.plot(x1,y1,color="blue")
-    ax1.plot(x2,y2,color="lightblue")
-    plt.show()
+    term.insert(INSERT, "area: "+str(output)+"nm2\n")
 
-def truncate(q):
+def truncate(q, l, r):
     #calculate data length for curve fit plotting.  only uses the "include" data from the step above
+    #q is the input data
+    #l is the left truncation
+    #r is the right truncation
     q_include = []
-    global left_trunc
-    global right_trunc
     i=0
     while (i<len(q)-1):
-        if (q[i][0] > left_trunc) and (q[i][0] < right_trunc):
+        if (q[i][0] > l) and (q[i][0] < r):
                 q_include.append(q[i])
         i = i+1
     return(q_include)
@@ -198,10 +188,12 @@ topo_button = tkinter.Button(top, text ="Create Annotated Topo Image",command=to
 #iv button
 def ivFunc():
     global data
+    global left_trunc
+    global right_trunc
     if ivload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
         q = arrayProc(data)
-        qinc = truncate(q)
+        qinc = truncate(q, left_trunc, right_trunc)
         fits = functions.curveFit(qinc)
         functions.ivplot(q,qinc,fits)
     else:
@@ -221,7 +213,6 @@ def leftFunc():
     except:
         term.insert(INSERT, "Not a valid numerical value."+leftstring+"\n")
 
-
 def rightFunc():
     global right_trunc
     rightstring=iv_right_entry.get()
@@ -231,22 +222,44 @@ def rightFunc():
     except:
         term.insert(INSERT, "Not a valid numerical value."+rightstring+"\n")
 
+def leftFuncHt():
+    global left_trunc_ht
+    leftstring=ht_left_entry.get()
+    try:
+        left_trunc_ht = float(leftstring)
+        term.insert(INSERT, "Set the left HT truncation to "+leftstring+"\n")
+    except:
+        term.insert(INSERT, "Not a valid numerical value."+leftstring+"\n")
+
+def rightFuncHt():
+    global right_trunc_ht
+    rightstring=ht_right_entry.get()
+    try:
+        right_trunc_ht = float(rightstring)
+        term.insert(INSERT, "Set the right HT truncation to "+rightstring+"\n")
+    except:
+        term.insert(INSERT, "Not a valid numerical value."+rightstring+"\n")
+
 
 iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
 
 iv_left_button = tkinter.Button(top, text ="Set", command=leftFunc)
 iv_right_button = tkinter.Button(top, text ="Set", command=rightFunc)
-ht_left_button = tkinter.Button(top, text ="Set")
-ht_right_button = tkinter.Button(top, text ="Set")
+ht_left_button = tkinter.Button(top, text ="Set", command=leftFuncHt)
+ht_right_button = tkinter.Button(top, text ="Set", command=rightFuncHt)
 
 #resistivity button
 def resFunc():
     global data
+    global left_trunc_ht
+    global right_trunc_ht
     if htload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
         q = arrayProc(data)
-        r = q
-        integrate(q,r)
+        qinc = truncate(q, left_trunc_ht, right_trunc_ht)
+        integrate(qinc)
+        s = [] #pass an empty set for curve-fitting
+        functions.ivplot(q,qinc,s)
     else:
         term.insert(INSERT, "Need to load wire profile.\n")
 res_button = tkinter.Button(top, text ="Calculate Resistivity",command=resFunc)

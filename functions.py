@@ -55,12 +55,12 @@ def ivplot(q,r,s):
     x2 = []
     y2 = []
     i=0
-    while i<len(q):
+    while i<len(q)-1:
         x1.append(q[i][0])
         y1.append(q[i][1])
         i = i+1
     i=0
-    while i<len(r):
+    while i<len(r)-1:
         x2.append(r[i][0])
         y2.append(r[i][1])
         i = i+1
@@ -74,9 +74,13 @@ def ivplot(q,r,s):
     #ax1.plot([x1,x2],[y1,y2],marker="o",color="red")
     ax1.plot(x1,y1,color="lightblue")
     ax1.plot(x2,y2,color="blue")
-    line_x1 = x2[0]
-    line_x2 = x2[len(x2)-1]
-    line_y1 = f(x2[0],s[0],s[1])
-    line_y2 = f(x2[len(x2)-1],s[0],s[1])
-    ax1.plot([line_x1,line_x2],[line_y1, line_y2],marker="o",color="red")
+    if len(s)>0:#iv plot option
+        line_x1 = x2[0]
+        line_x2 = x2[len(x2)-1]
+        line_y1 = f(x2[0],s[0],s[1])
+        line_y2 = f(x2[len(x2)-1],s[0],s[1])
+        ax1.plot([line_x1,line_x2],[line_y1, line_y2],marker="o",color="red")
+    else: #ht plot option
+        ax1.set_ylabel('Height (nm)')
+        ax1.set_xlabel('Width (nm)')
     plt.show()
