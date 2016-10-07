@@ -11,9 +11,13 @@ import numpy as np
 top = tkinter.Tk()
 global data
 global left_trunc #left truncation point for iv curves
-global right_trunc #right truncation point fo iv curves
+global right_trunc #right truncation point for iv curves
+global left_trunc_ht #left truncation point for ht curves
+global right_trunc_ht #right truncation point for ht curves
 left_trunc = -1000000 #initial large values prevent truncation
 right_trunc = 1000000
+left_trunc_ht = -1000000
+right_truc_ht = 1000000
 global xpos #topo coordinates
 global ypos #topo coordinates
 xpos = 0
@@ -33,6 +37,12 @@ right_text = StringVar()
 right_text.set("IV Right Truncation:")
 left_label = Label( top, textvariable=left_text)
 right_label = Label( top, textvariable=right_text)
+left_text_ht = StringVar()
+left_text_ht.set("HT Left Truncation:")
+right_text_ht = StringVar()
+right_text_ht.set("HT Right Truncation:")
+left_label_ht = Label( top, textvariable=left_text_ht)
+right_label_ht = Label( top, textvariable=right_text_ht)
 
 def arrayProc(q):
     #this function splits the read file into a data array
@@ -99,6 +109,31 @@ C3 = Checkbutton(top, text = "Nanowire Height Profile Loaded", state=DISABLED, v
 
 #terminal
 term = Text(top)
+
+def integrate(q,r):
+    x1 = []
+    y1 = []
+    x2 = []
+    y2 = []
+    i=0
+    while i<len(q)-1:
+        x1.append(q[i][0])
+        y1.append(q[i][1])
+        i = i+1
+    i=0
+    while i<len(r)-1:
+        x2.append(r[i][0])
+        y2.append(r[i][1])
+        i = i+1
+    output = np.trapz(x1,y1)
+    print("area: "+str(output)+" square nanometers or whatever")
+    fig = plt.figure()
+    ax1 = fig.add_subplot(111)
+    ax1.set_ylabel('Width (nm)')
+    ax1.set_xlabel('Height (nm)')
+    ax1.plot(x1,y1,color="blue")
+    ax1.plot(x2,y2,color="lightblue")
+    plt.show()
 
 def truncate(q):
     #calculate data length for curve fit plotting.  only uses the "include" data from the step above
@@ -174,6 +209,8 @@ def ivFunc():
 
 iv_left_entry = Entry(top, bd =2)
 iv_right_entry = Entry(top, bd =2)
+ht_left_entry = Entry(top, bd =2)
+ht_right_entry = Entry(top, bd =2)
 
 def leftFunc():
     global left_trunc
@@ -199,11 +236,17 @@ iv_button = tkinter.Button(top, text ="Create I-V Curve",command=ivFunc)
 
 iv_left_button = tkinter.Button(top, text ="Set", command=leftFunc)
 iv_right_button = tkinter.Button(top, text ="Set", command=rightFunc)
+ht_left_button = tkinter.Button(top, text ="Set")
+ht_right_button = tkinter.Button(top, text ="Set")
 
 #resistivity button
 def resFunc():
+    global data
     if htload.get() == 1:
         term.insert(INSERT, "10010101001010101010\n")
+        q = arrayProc(data)
+        r = q
+        integrate(q,r)
     else:
         term.insert(INSERT, "Need to load wire profile.\n")
 res_button = tkinter.Button(top, text ="Calculate Resistivity",command=resFunc)
@@ -224,6 +267,12 @@ right_label.pack()
 iv_right_entry.pack()
 iv_right_button.pack()
 res_button.pack()
+left_label_ht.pack()
+ht_left_entry.pack()
+ht_left_button.pack()
+right_label_ht.pack()
+ht_right_entry.pack()
+ht_right_button.pack()
 term.pack()
 
 #let 'er rip
