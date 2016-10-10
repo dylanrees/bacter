@@ -121,7 +121,7 @@ def integrate(q):
         y1.append(q[i][1])
         i = i+1
     i=0
-    output = np.trapz(x1,y1)
+    output = np.trapz(y1,x1)
     term.insert(INSERT, "area: "+str(output)+"nm2\n")
 
 def truncate(q, l, r):
