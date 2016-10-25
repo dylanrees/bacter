@@ -25,7 +25,11 @@ def curveFit(q):
     popt, pcov = curve_fit(f, x, y)
     print("Here are your curve fit values:")
     print(popt[0])
+    print("y intercept is :")
     print(popt[1])
+    resist = 1/popt[0]
+    print("resistance is:")
+    print(resist)
     return(popt)
 
 def deviation():
@@ -48,8 +52,8 @@ def ivplot(q,r,s):
     #s = curve fits
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    ax1.set_ylabel('Current (nA)')
-    ax1.set_xlabel('Voltage (uV)')
+    ax1.set_ylabel('Current (uA)')
+    ax1.set_xlabel('Voltage (mV)')
     x1 = []
     y1 = []
     x2 = []

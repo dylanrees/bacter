@@ -79,18 +79,18 @@ def arrayProc(q):
 def topoPlot():
     global xpos
     global ypos
-    xpos=xpos.split('\t')
-    ypos=ypos.split('\t')
     print("xpos = "+str(xpos))
     print("ypos = "+str(ypos))
+    xpos=xpos.split('\t')
+    ypos=ypos.split('\t')
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    img=mpimg.imread('GoodTopo3.tiff')
+    img=mpimg.imread('Topo.png')
     ax1.axis([0, len(img), 0, len(img)]) #set the axes to match the image size
     imgplot = ax1.imshow(np.flipud(img)) #display the topo image
     xplot = len(img)*float(xpos[0])/float(xpos[1])
     yplot = len(img)*float(ypos[0])/float(ypos[1])
-    ax1.plot(xplot,yplot,marker="o") #put a marker on the right part of the topo image
+    ax1.plot(xplot,yplot,marker="o",color="red") #put a marker on the right part of the topo image
     plt.show()
     #Sy print("The image's extent is "+str(len(img)))
 
